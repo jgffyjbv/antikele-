@@ -2,17 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Antikele Books – Premium Sefarim</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+    <!-- Stripe buy button SDK (loaded once) -->
+    <script async src="https://js.stripe.com/v3/buy-button.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: #fefcf5;
             color: #1a1e2b;
             line-height: 1.5;
         }
+
+        /* header with half-yellow half-blue glitter effect */
         .hero {
             background: linear-gradient(135deg, #FFD700 0%, #FFD700 40%, #1E3A8A 60%, #1E3A8A 100%);
             background-image: 
@@ -24,25 +33,47 @@
             color: white;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        .hero h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 0.5rem; }
-        .hero p { font-size: 1.2rem; max-width: 700px; margin: 0 auto; opacity: 0.95; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* product grid */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem;
         }
+
         .product-card {
             background: white;
             border-radius: 1.5rem;
             overflow: hidden;
             box-shadow: 0 15px 30px -12px rgba(0,0,0,0.1);
-            transition: transform 0.25s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
             display: flex;
             flex-direction: column;
             border: 1px solid #f0e6d0;
         }
-        .product-card:hover { transform: translateY(-6px); }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 35px -16px rgba(0,0,0,0.15);
+        }
+
         .product-image {
             aspect-ratio: 1 / 1;
             background: #faf6eb;
@@ -50,181 +81,270 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            border-bottom: 1px solid #eee5d8;
         }
         .product-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s;
         }
+        .product-card:hover .product-image img {
+            transform: scale(1.02);
+        }
+        /* fallback if no image */
         .no-img {
             font-size: 3rem;
             color: #b8a99a;
         }
-        .product-info { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
-        .product-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .product-desc { font-size: 0.85rem; color: #5b6e8c; margin-bottom: 1rem; flex-grow: 1; }
-        .product-price { font-size: 1.7rem; font-weight: 800; color: #b45309; margin: 0.5rem 0 1rem; }
-        .btn-buy {
-            background: #0f172a;
-            color: white;
-            width: 100%;
-            padding: 0.85rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 60px;
-            cursor: pointer;
-            text-align: center;
-            display: inline-block;
-            border: none;
-            font-family: inherit;
+
+        .product-info {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
-        .btn-buy:hover { background: #2d3a5e; }
-        footer { text-align: center; padding: 2rem; border-top: 1px solid #e7dfd1; margin-top: 2rem; color: #6c5a48; font-size: 0.85rem; }
-        @media (max-width: 700px) { .hero h1 { font-size: 2rem; } }
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+            color: #2c2a2a;
+        }
+        .product-desc {
+            font-size: 0.85rem;
+            color: #5b6e8c;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+        .product-price {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #b45309;
+            margin: 0.5rem 0 1rem;
+        }
+        /* Stripe button container to ensure consistent width */
+        .stripe-button-container {
+            margin-top: auto;
+            width: 100%;
+        }
+        stripe-buy-button {
+            display: block;
+            width: 100%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #e7dfd1;
+            margin-top: 2rem;
+            color: #6c5a48;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 2rem; }
+            .products-grid { gap: 1.2rem; }
+        }
     </style>
 </head>
 <body>
+
 <div class="hero">
     <h1>✨ Antikele Books ✨</h1>
     <p>Premium Sefarim • Elegant leather & hardcover editions • Worldwide shipping</p>
 </div>
+
 <div class="container">
     <div class="products-grid">
 
-        <!-- 1. Ashkenaz White Leather -->
+        <!-- PRODUCT 1 - Ashkenaz White Leather (Stripe button 1) -->
         <div class="product-card">
             <div class="product-image">
-                <img src="imal5-sw.jpg" alt="Ashkenaz White Leather" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"no-img\">📖</div>'">
+                <img src="images/imal5-sw.jpg" alt="Ashkenaz – Signature White Leather Schottenstein Ed. Interlinear 5 Vol Set" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"no-img\">📖</div>'">
             </div>
             <div class="product-info">
-                <div class="product-title">Ashkenaz – Signature White Leather Schottenstein Ed. Interlinear 5 Vol Set</div>
-                <div class="product-desc">Luxurious white leather, interlinear Hebrew/English translation.</div>
+                <div class="product-title">Ashkenaz – Signature White Leather<br>Schottenstein Ed. Interlinear 5 Vol Set</div>
+                <div class="product-desc">Luxurious white leather, interlinear Hebrew/English translation. Perfect for daily study.</div>
                 <div class="product-price">$750.00</div>
-                <button class="btn-buy" onclick="alert('Stripe link coming soon. Contact for purchase.')">Buy Now</button>
+                <div class="stripe-button-container">
+                    <stripe-buy-button
+                        buy-button-id="buy_btn_1TZVKp2RTFwwHV66SGBgfrhp"
+                        publishable-key="pk_live_51RqBZ92RTFwwHV66HTX4mAVfy0l4fQIwMMh1sJwiH4K7szWBVTj7vQVD1LN3oQjBlJWgc6x1wM7ziGICzqImZLEh00MTUt1F9Z">
+                    </stripe-buy-button>
+                </div>
             </div>
         </div>
 
-        <!-- 2. Signature Leather Machzor Navy -->
+        <!-- PRODUCT 2 - Signature Leather Machzor Navy (Stripe button 2) -->
         <div class="product-card">
             <div class="product-image">
-                <img src="Screenshot-2025-12-21-at-9.43.49-AM-1.png" alt="Machzor Navy" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📘</div>'">
+                <img src="images/Screenshot-2025-12-21-at-9.43.49-AM-1.png" alt="Signature Leather Collection Ashkenaz Hebrew/English Full-Size 5 Vol Machzor Set Navy" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📘</div>'">
             </div>
             <div class="product-info">
-                <div class="product-title">Signature Leather Collection Ashkenaz Hebrew/English Full-Size 5 Vol Machzor Set (Navy)</div>
-                <div class="product-desc">Elegant navy leather machzorim, full-size.</div>
+                <div class="product-title">Signature Leather Collection Ashkenaz<br>Hebrew/English Full-Size 5 Vol Machzor Set (Navy)</div>
+                <div class="product-desc">Elegant navy leather machzorim for Rosh Hashanah & Yom Kippur. Full-size, clear type.</div>
                 <div class="product-price">$800.00</div>
-                <button class="btn-buy" onclick="alert('Stripe link coming soon.')">Buy Now</button>
+                <div class="stripe-button-container">
+                    <stripe-buy-button
+                        buy-button-id="buy_btn_1TZVT82RTFwwHV66eKFd0j5R"
+                        publishable-key="pk_live_51RqBZ92RTFwwHV66HTX4mAVfy0l4fQIwMMh1sJwiH4K7szWBVTj7vQVD1LN3oQjBlJWgc6x1wM7ziGICzqImZLEh00MTUt1F9Z">
+                    </stripe-buy-button>
+                </div>
             </div>
         </div>
 
-        <!-- 3. Mikraot Gedolot -->
+        <!-- PRODUCT 3 - סט מקראות גדולות מעור אמיתי (Stripe button 3) -->
         <div class="product-card">
             <div class="product-image">
-                <img src="749630960b7b3d9b25294b6153c07b75-1536x1536-1.jpg" alt="Mikraot Gedolot" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📜</div>'">
+                <img src="images/749630960b7b3d9b25294b6153c07b75-1536x1536-1.jpg" alt="סט מקראות גדולות מעור אמיתי" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📜</div>'">
             </div>
             <div class="product-info">
                 <div class="product-title">סט מקראות גדולות מעור אמיתי</div>
-                <div class="product-desc">Authentic leather Mikraot Gedolot.</div>
+                <div class="product-desc">Authentic leather Mikraot Gedolot – classic commentators, beautiful binding.</div>
                 <div class="product-price">$600.00</div>
-                <button class="btn-buy" onclick="alert('Stripe link coming soon.')">Buy Now</button>
+                <div class="stripe-button-container">
+                    <stripe-buy-button
+                        buy-button-id="buy_btn_1TZVU02RTFwwHV66Ik2rzq5n"
+                        publishable-key="pk_live_51RqBZ92RTFwwHV66HTX4mAVfy0l4fQIwMMh1sJwiH4K7szWBVTj7vQVD1LN3oQjBlJWgc6x1wM7ziGICzqImZLEh00MTUt1F9Z">
+                    </stripe-buy-button>
+                </div>
             </div>
         </div>
 
-        <!-- 4. Ein Yaakov 18 vol -->
+        <!-- PRODUCT 4 - Ein Yaakov Complete 18 Vol (Stripe button 4) -->
         <div class="product-card">
             <div class="product-image">
-                <img src="9781422642870-ein-yaakov-complete-set-18V.jpg" alt="Ein Yaakov" onerror="this.parentElement.innerHTML='<div class=\"no-img\">🌟</div>'">
+                <img src="images/9781422642870-ein-yaakov-complete-set-18V.jpg" alt="Schottenstein Edition Ein Yaakov Complete 18 Volume Set" onerror="this.parentElement.innerHTML='<div class=\"no-img\">🌟</div>'">
             </div>
             <div class="product-info">
-                <div class="product-title">Schottenstein Edition Ein Yaakov Complete 18 Volume Set [Hardcover]</div>
-                <div class="product-desc">Aggadic gems of the Talmud.</div>
+                <div class="product-title">Schottenstein Edition Ein Yaakov<br>Complete 18 Volume Set [Hardcover]</div>
+                <div class="product-desc">Aggadic gems of the Talmud with clear English translation and notes.</div>
                 <div class="product-price">Price on request</div>
-                <button class="btn-buy" onclick="alert('Please contact us for pricing.')">Inquire</button>
+                <div class="stripe-button-container">
+                    <stripe-buy-button
+                        buy-button-id="buy_btn_1TZVV92RTFwwHV66auvfOCe4"
+                        publishable-key="pk_live_51RqBZ92RTFwwHV66HTX4mAVfy0l4fQIwMMh1sJwiH4K7szWBVTj7vQVD1LN3oQjBlJWgc6x1wM7ziGICzqImZLEh00MTUt1F9Z">
+                    </stripe-buy-button>
+                </div>
             </div>
         </div>
 
-        <!-- 5. Talmud Schottenstein Hebrew Compact -->
+        <!-- PRODUCT 5 - Talmud Schottenstein Hebrew Compact (Stripe button 5) -->
         <div class="product-card">
             <div class="product-image">
-                <img src="555.webp" alt="Hebrew Compact" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📚</div>'">
+                <img src="images/555.webp" alt="Talmud - Schottenstein Hebrew Compact Edition" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📚</div>'">
             </div>
             <div class="product-info">
                 <div class="product-title">Talmud – Schottenstein Hebrew Compact Edition</div>
-                <div class="product-desc">Compact size, Hebrew-only text.</div>
+                <div class="product-desc">Compact size, Hebrew-only text. Perfect for travel and daily learning.</div>
                 <div class="product-price">$2,699.00</div>
-                <button class="btn-buy" onclick="alert('Stripe link coming soon.')">Buy Now</button>
+                <div class="stripe-button-container">
+                    <stripe-buy-button
+                        buy-button-id="buy_btn_1TZVWB2RTFwwHV66qNbOplnY"
+                        publishable-key="pk_live_51RqBZ92RTFwwHV66HTX4mAVfy0l4fQIwMMh1sJwiH4K7szWBVTj7vQVD1LN3oQjBlJWgc6x1wM7ziGICzqImZLEh00MTUt1F9Z">
+                    </stripe-buy-button>
+                </div>
             </div>
         </div>
 
-        <!-- 6. Full Size Schottenstein English -->
+        <!-- PRODUCT 6 - FULL SIZE SCHOTTENSTEIN ENGLISH (Stripe button 6) -->
         <div class="product-card">
             <div class="product-image">
-                <img src="5540.jpg" alt="Full Size English" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📕</div>'">
+                <img src="images/5540.jpg" alt="FULL SIZE SCHOTTENSTEIN Ed Talmud ENGLISH" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📕</div>'">
             </div>
             <div class="product-info">
                 <div class="product-title">FULL SIZE SCHOTTENSTEIN Ed Talmud ENGLISH</div>
-                <div class="product-desc">Classic full-size Schottenstein English edition.</div>
+                <div class="product-desc">The classic full-size Schottenstein English edition – complete set, magnificent scholarship.</div>
                 <div class="product-price">$2,699.10</div>
-                <button class="btn-buy" onclick="alert('Stripe link coming soon.')">Buy Now</button>
+                <div class="stripe-button-container">
+                    <stripe-buy-button
+                        buy-button-id="buy_btn_1TZVXX2RTFwwHV66elKWKkBr"
+                        publishable-key="pk_live_51RqBZ92RTFwwHV66HTX4mAVfy0l4fQIwMMh1sJwiH4K7szWBVTj7vQVD1LN3oQjBlJWgc6x1wM7ziGICzqImZLEh00MTUt1F9Z">
+                    </stripe-buy-button>
+                </div>
             </div>
         </div>
 
-        <!-- 7. Oz Vehadar Beinini -->
+        <!-- PRODUCT 7 - Oz Vehadar Shas Beinini (Stripe button 7) -->
         <div class="product-card">
             <div class="product-image">
-                <img src="shas-ozvehodor-large-1350.webp" alt="Shas Beinini" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📖</div>'">
+                <img src="images/shas-ozvehodar-large-1350.webp" alt="Talmud Bavli Oz Vehadar – Shas Beinini" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📖</div>'">
             </div>
             <div class="product-info">
                 <div class="product-title">Talmud Bavli Oz Vehadar – Shas Beinini – The Regular Edition</div>
-                <div class="product-desc">Clear layout, traditional Vilna page.</div>
+                <div class="product-desc">Clear layout, traditional Vilna page with additional commentaries.</div>
                 <div class="product-price">$945.00</div>
-                <button class="btn-buy" onclick="alert('Stripe link coming soon.')">Buy Now</button>
+                <div class="stripe-button-container">
+                    <stripe-buy-button
+                        buy-button-id="buy_btn_1TZVYi2RTFwwHV66CAXrjDTb"
+                        publishable-key="pk_live_51RqBZ92RTFwwHV66HTX4mAVfy0l4fQIwMMh1sJwiH4K7szWBVTj7vQVD1LN3oQjBlJWgc6x1wM7ziGICzqImZLEh00MTUt1F9Z">
+                    </stripe-buy-button>
+                </div>
             </div>
         </div>
 
-        <!-- 8. Oz Vehadar Peninim -->
+        <!-- PRODUCT 8 - Oz Vehadar Shas Peninim (Stripe button 8) -->
         <div class="product-card">
             <div class="product-image">
-                <img src="444.webp" alt="Shas Peninim" onerror="this.parentElement.innerHTML='<div class=\"no-img\">✨</div>'">
+                <img src="images/444.webp" alt="Talmud Bavli Oz Vehadar – Shas Peninim" onerror="this.parentElement.innerHTML='<div class=\"no-img\">✨</div>'">
             </div>
             <div class="product-info">
                 <div class="product-title">Talmud Bavli Oz Vehadar – Shas Peninim</div>
-                <div class="product-desc">Premium edition with enhanced fonts.</div>
+                <div class="product-desc">Premium edition with enhanced fonts and durable binding.</div>
                 <div class="product-price">$405.00</div>
-                <button class="btn-buy" onclick="alert('Stripe link coming soon.')">Buy Now</button>
+                <div class="stripe-button-container">
+                    <stripe-buy-button
+                        buy-button-id="buy_btn_1TZVZr2RTFwwHV66yilU5HML"
+                        publishable-key="pk_live_51RqBZ92RTFwwHV66HTX4mAVfy0l4fQIwMMh1sJwiH4K7szWBVTj7vQVD1LN3oQjBlJWgc6x1wM7ziGICzqImZLEh00MTUt1F9Z">
+                    </stripe-buy-button>
+                </div>
             </div>
         </div>
 
-        <!-- 9. Mesivta Peninim Compact -->
+        <!-- PRODUCT 9 - Mesivta Peninim Compact Size (Stripe button 9) -->
         <div class="product-card">
             <div class="product-image">
-                <img src="jcdbhe.webp" alt="Mesivta Compact" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📙</div>'">
+                <img src="images/jcdbhe.webp" alt="Talmud Bavli Mesivta – Peninim, Compact Size" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📙</div>'">
             </div>
             <div class="product-info">
                 <div class="product-title">Talmud Bavli Mesivta – Peninim, Compact Size</div>
-                <div class="product-desc">Handy compact set, complete Mesivta commentary.</div>
+                <div class="product-desc">Handy compact set, complete Mesivta commentary in a space-saving format.</div>
                 <div class="product-price">$4,499.00</div>
-                <button class="btn-buy" onclick="alert('Stripe link coming soon.')">Buy Now</button>
+                <div class="stripe-button-container">
+                    <stripe-buy-button
+                        buy-button-id="buy_btn_1TZVb22RTFwwHV66Zyxewh3V"
+                        publishable-key="pk_live_51RqBZ92RTFwwHV66HTX4mAVfy0l4fQIwMMh1sJwiH4K7szWBVTj7vQVD1LN3oQjBlJWgc6x1wM7ziGICzqImZLEh00MTUt1F9Z">
+                    </stripe-buy-button>
+                </div>
             </div>
         </div>
 
-        <!-- 10. Mesivta Full Size -->
+        <!-- PRODUCT 10 - Mesivta Full Size (Stripe button 10) -->
         <div class="product-card">
             <div class="product-image">
-                <img src="5540-1.jpg" alt="Mesivta Full" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📚</div>'">
+                <img src="images/5540-1.jpg" alt="Talmud Bavli Mesivta – Full Size" onerror="this.parentElement.innerHTML='<div class=\"no-img\">📚</div>'">
             </div>
             <div class="product-info">
                 <div class="product-title">Talmud Bavli Mesivta – Full Size</div>
-                <div class="product-desc">Large format for comfortable learning.</div>
+                <div class="product-desc">The authoritative full-size Mesivta edition, large format for comfortable learning.</div>
                 <div class="product-price">$5,440.00</div>
-                <button class="btn-buy" onclick="alert('Stripe link coming soon.')">Buy Now</button>
+                <div class="stripe-button-container">
+                    <stripe-buy-button
+                        buy-button-id="buy_btn_1TZVc42RTFwwHV66M6mkZyOl"
+                        publishable-key="pk_live_51RqBZ92RTFwwHV66HTX4mAVfy0l4fQIwMMh1sJwiH4K7szWBVTj7vQVD1LN3oQjBlJWgc6x1wM7ziGICzqImZLEh00MTUt1F9Z">
+                    </stripe-buy-button>
+                </div>
             </div>
         </div>
 
     </div>
 </div>
+
 <footer>
-    <p>🔒 Secure payments via Stripe (coming soon) | 📦 Free shipping on orders over $500 | © Antikele Books</p>
+    <p>🔒 Secure payments via Stripe | 📦 Free shipping on orders over $500 | © Antikele Books</p>
 </footer>
+
 </body>
 </html>
