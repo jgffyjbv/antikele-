@@ -308,7 +308,6 @@
             flex-direction: row;   /* horizontal: image left, info right */
             transition: box-shadow .3s var(--ease), transform .3s var(--ease), border-color .3s;
             position: relative;
-            align-items: flex-start;
         }
         .product-card:hover {
             box-shadow: var(--card-shadow-hover);
@@ -333,7 +332,6 @@
         .product-image-wrap {
             width: 190px;
             min-width: 190px;
-            height: 190px;
             background: #f5f0e8;
             position: relative;
             overflow: hidden;
@@ -672,60 +670,24 @@
             .header-right { gap: 0.7rem; }
         }
 
-        /* ── Store photos strip ── */
-        .store-strip {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            height: 260px;
+        /* ── PayPal button ── */
+        .paypal-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.7rem 1rem;
+            background: #ffc439;
+            color: #003087;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: background .2s, transform .15s;
         }
-        .store-strip-photo {
-            position: relative;
-            overflow: hidden;
-        }
-        .store-strip-photo img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform .5s cubic-bezier(.25,.1,.25,1);
-        }
-        .store-strip-photo:hover img { transform: scale(1.05); }
-        .store-strip-caption {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: linear-gradient(to top, rgba(8,16,40,.72), transparent);
-            color: #fff;
-            padding: 1.5rem 1.2rem 0.75rem;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-        }
-        /* ── Price / CTA banner ── */
-        .price-cta {
-            background: linear-gradient(135deg, #0c1a36 0%, #1a3362 100%);
-            padding: 1.4rem 1.5rem;
-            text-align: center;
-        }
-        .price-cta p { color: #8faace; font-size: 0.88rem; margin-bottom: 1rem; }
-        .price-cta strong { color: #f0ddb0; }
-        .cta-row { display: flex; gap: 0.85rem; justify-content: center; flex-wrap: wrap; }
-        .cta-btn {
-            display: inline-flex; align-items: center; gap: 0.45rem;
-            padding: 0.7rem 1.6rem; border-radius: 99px;
-            font-weight: 600; font-size: 0.9rem;
-            text-decoration: none; transition: all .2s; min-height: 44px;
-        }
-        .cta-gold {
-            background: linear-gradient(135deg,#d4a84b,#b8852a);
-            color: #fff; box-shadow: 0 3px 12px rgba(184,133,42,.4);
-        }
-        .cta-gold:hover { transform: translateY(-2px); }
-        .cta-outline {
-            background: transparent; color: #fff;
-            border: 1.5px solid rgba(255,255,255,.35);
-        }
-        .cta-outline:hover { background: rgba(255,255,255,.08); }
-        @media (max-width: 640px) {
-            .store-strip { height: 180px; }
-        }
+        .paypal-btn:hover { background: #f0b429; transform: translateY(-1px); }
+        .paypal-btn img { height: 18px; width: auto; }
     </style>
 </head>
 <body>
@@ -762,35 +724,15 @@
 <!-- ══ TRUST BAR ══ -->
 <div class="trust-bar">
     <div class="trust-inner">
-        <div class="trust-item"><span class="icon">🔒</span> <strong>Secure</strong> Stripe checkout</div>
+        <div class="trust-item"><span class="icon">🔒</span> <strong>Secure</strong> checkout</div>
         <div class="trust-item"><span class="icon">🚚</span> <strong>Free shipping</strong> over $500</div>
         <div class="trust-item"><span class="icon">🌍</span> <strong>Worldwide</strong> delivery</div>
         <div class="trust-item"><span class="icon">↩️</span> <strong>14-day</strong> easy returns</div>
     </div>
 </div>
 
-
-<!-- ══ STORE PHOTOS ══ -->
-<div class="store-strip">
-    <div class="store-strip-photo">
-        <img src="storefront.jpg" alt="Antikele Books storefront Brooklyn NY">
-        <div class="store-strip-caption">📍 Antikele on Sixteen · Brooklyn, NY</div>
-    </div>
-    <div class="store-strip-photo">
-        <img src="bookshelf.jpg" alt="Our leather-bound sefarim collection">
-        <div class="store-strip-caption">📚 Hand-selected leather editions</div>
-    </div>
-</div>
-<!-- ══ PRICE + CTA ══ -->
-<div class="price-cta">
-    <p>Collections ranging from <strong>$1,000</strong> to <strong>$15,000</strong> · Every edition hand-selected for quality &amp; scholarship</p>
-    <div class="cta-row">
-        <a href="tel:+16465281350" class="cta-btn cta-gold">🏪 Come In Store</a>
-        <a href="#catalog" class="cta-btn cta-outline">🛒 Order Online</a>
-    </div>
-</div>
 <!-- ══ CATALOG ══ -->
-<div class="container" id="catalog">
+<div class="container">
 
     <div class="toolbar">
         <span class="results-count">Showing <strong>10</strong> premium editions</span>
@@ -819,8 +761,11 @@
                     <div class="product-price">$1,000.00</div>
                 </div>
                 <div class="card-divider"></div>
-                <div class="stripe-button-container">
-                    <stripe-buy-button buy-button-id="buy_btn_1TZVKp2RTFwwHV66SGBgfrhp" publishable-key="pk_live_51RqBZ92RTFwwHV66HTX4mAVfy0l4fQIwMMh1sJwiH4K7szWBVTj7vQVD1LN3oQjBlJWgc6x1wM7ziGICzqImZLEh00MTUt1F9Z"></stripe-buy-button>
+                <div class="paypal-button-container">
+                    <a href="https://www.paypal.com/ncp/payment/5XJ9QTLY4MP2E" target="_blank" class="paypal-btn">
+                        <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" alt="PayPal">
+                        Pay Now
+                    </a>
                 </div>
             </div>
         </div>
@@ -932,11 +877,11 @@
         <!-- PRODUCT 6 -->
         <div class="product-card">
             <div class="product-image-wrap"
-                 data-src="artisckleenglish_.jpg"
+                 data-src="5540.jpg"
                  data-caption="Full Size Schottenstein Edition Talmud – English"
                  onclick="openLightbox(this)"
                  role="button" tabindex="0" aria-label="View larger image">
-                <img src="artisckleenglish_.jpg"
+                <img src="5540.jpg"
                      alt="FULL SIZE SCHOTTENSTEIN Ed Talmud ENGLISH"
                      onerror="this.onerror=null;this.style.display='none';this.parentElement.innerHTML+='<div class=\'no-img-placeholder\'>📕</div>'">
                 <div class="zoom-overlay"><div class="zoom-icon">🔍</div></div>
@@ -1082,7 +1027,7 @@
         </div>
         <div class="footer-col">
             <h4>Shop With Confidence</h4>
-            <p>🔒 Secure checkout via Stripe</p>
+            <p>🔒 Secure checkout</p>
             <p>🚚 Free shipping on orders $500+</p>
             <p>🌍 Worldwide delivery available</p>
             <p>↩️ Easy returns within 14 days</p>
@@ -1090,7 +1035,7 @@
     </div>
     <div class="footer-bottom">
         <span>© 2025 Antikele Books · All Rights Reserved</span>
-        <span class="secure-badge">🔒 <span>Secure Payments</span> <span class="dot">·</span> Powered by Stripe</span>
+        <span class="secure-badge">🔒 <span>Secure Payments</span></span>
     </div>
 </footer>
 
