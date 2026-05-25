@@ -308,6 +308,8 @@
             flex-direction: row;   /* horizontal: image left, info right */
             transition: box-shadow .3s var(--ease), transform .3s var(--ease), border-color .3s;
             position: relative;
+            align-items: stretch;
+            max-height: 200px;
         }
         .product-card:hover {
             box-shadow: var(--card-shadow-hover);
@@ -332,6 +334,7 @@
         .product-image-wrap {
             width: 190px;
             min-width: 190px;
+            height: 200px;
             background: #f5f0e8;
             position: relative;
             overflow: hidden;
@@ -448,7 +451,7 @@
             margin: 0.55rem 0 0.6rem;
         }
 
-        .stripe-button-container { width: 100%; }
+        .stripe-button-container { width: 100%; overflow: hidden; max-height: 50px; }
         stripe-buy-button { display: block; width: 100%; }
 
         /* ══════════════════════════════════════════
@@ -669,6 +672,61 @@
             .footer-grid { grid-template-columns: 1fr; }
             .header-right { gap: 0.7rem; }
         }
+
+        /* ── Store photos strip ── */
+        .store-strip {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 260px;
+        }
+        .store-strip-photo {
+            position: relative;
+            overflow: hidden;
+        }
+        .store-strip-photo img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .5s cubic-bezier(.25,.1,.25,1);
+        }
+        .store-strip-photo:hover img { transform: scale(1.05); }
+        .store-strip-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(8,16,40,.72), transparent);
+            color: #fff;
+            padding: 1.5rem 1.2rem 0.75rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+        }
+        /* ── Price / CTA banner ── */
+        .price-cta {
+            background: linear-gradient(135deg, #0c1a36 0%, #1a3362 100%);
+            padding: 1.4rem 1.5rem;
+            text-align: center;
+        }
+        .price-cta p { color: #8faace; font-size: 0.88rem; margin-bottom: 1rem; }
+        .price-cta strong { color: #f0ddb0; }
+        .cta-row { display: flex; gap: 0.85rem; justify-content: center; flex-wrap: wrap; }
+        .cta-btn {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            padding: 0.7rem 1.6rem; border-radius: 99px;
+            font-weight: 600; font-size: 0.9rem;
+            text-decoration: none; transition: all .2s; min-height: 44px;
+        }
+        .cta-gold {
+            background: linear-gradient(135deg,#d4a84b,#b8852a);
+            color: #fff; box-shadow: 0 3px 12px rgba(184,133,42,.4);
+        }
+        .cta-gold:hover { transform: translateY(-2px); }
+        .cta-outline {
+            background: transparent; color: #fff;
+            border: 1.5px solid rgba(255,255,255,.35);
+        }
+        .cta-outline:hover { background: rgba(255,255,255,.08); }
+        @media (max-width: 640px) {
+            .store-strip { height: 180px; }
+        }
     </style>
 </head>
 <body>
@@ -712,8 +770,28 @@
     </div>
 </div>
 
+
+<!-- ══ STORE PHOTOS ══ -->
+<div class="store-strip">
+    <div class="store-strip-photo">
+        <img src="storefront.jpg" alt="Antikele Books storefront Brooklyn NY">
+        <div class="store-strip-caption">📍 Antikele on Sixteen · Brooklyn, NY</div>
+    </div>
+    <div class="store-strip-photo">
+        <img src="Screenshot_2026-05-25_at_13_02_04.png" alt="Our leather-bound sefarim collection">
+        <div class="store-strip-caption">📚 Hand-selected leather editions</div>
+    </div>
+</div>
+<!-- ══ PRICE + CTA ══ -->
+<div class="price-cta">
+    <p>Collections ranging from <strong>$1,000</strong> to <strong>$15,000</strong> · Every edition hand-selected for quality &amp; scholarship</p>
+    <div class="cta-row">
+        <a href="tel:+16465281350" class="cta-btn cta-gold">🏪 Come In Store</a>
+        <a href="#catalog" class="cta-btn cta-outline">🛒 Order Online</a>
+    </div>
+</div>
 <!-- ══ CATALOG ══ -->
-<div class="container">
+<div class="container" id="catalog">
 
     <div class="toolbar">
         <span class="results-count">Showing <strong>10</strong> premium editions</span>
@@ -726,20 +804,20 @@
         <div class="product-card">
             <div class="product-image-wrap"
                  data-src="imal5-sw.jpg"
-                 data-caption="Ashkenaz – Signature White Leather Schottenstein Ed. Interlinear 5 Vol Set"
+                 data-caption="Siddur – Schottenstein Interlinear White Leather Edition (5 Vol Set)"
                  onclick="openLightbox(this)"
                  role="button" tabindex="0" aria-label="View larger image">
                 <img src="imal5-sw.jpg"
-                     alt="Ashkenaz – Signature White Leather Schottenstein Ed. Interlinear 5 Vol Set"
+                     alt="Siddur – Schottenstein Interlinear White Leather Edition (5 Vol Set)"
                      onerror="this.onerror=null;this.style.display='none';this.parentElement.innerHTML+='<div class=\'no-img-placeholder\'>📖</div>'">
                 <div class="zoom-overlay"><div class="zoom-icon">🔍</div></div>
             </div>
             <div class="product-info">
-                <div class="product-category">Siddur / Tefillah</div>
-                <div class="product-title">Ashkenaz – Signature White Leather Schottenstein Ed. Interlinear 5 Vol Set</div>
+                <div class="product-category">Siddur</div>
+                <div class="product-title">Siddur – Schottenstein Interlinear White Leather Edition (5 Vol Set)</div>
                 <div class="product-desc">Luxurious white leather, interlinear Hebrew/English translation. Perfect for daily study.</div>
                 <div class="product-price-row">
-                    <div class="product-price">$750.00</div>
+                    <div class="product-price">$1,000.00</div>
                 </div>
                 <div class="card-divider"></div>
                 <div class="stripe-button-container">
@@ -855,11 +933,11 @@
         <!-- PRODUCT 6 -->
         <div class="product-card">
             <div class="product-image-wrap"
-                 data-src="5540.jpg"
+                 data-src="artisckleenglish_.jpg"
                  data-caption="Full Size Schottenstein Edition Talmud – English"
                  onclick="openLightbox(this)"
                  role="button" tabindex="0" aria-label="View larger image">
-                <img src="5540.jpg"
+                <img src="artisckleenglish_.jpg"
                      alt="FULL SIZE SCHOTTENSTEIN Ed Talmud ENGLISH"
                      onerror="this.onerror=null;this.style.display='none';this.parentElement.innerHTML+='<div class=\'no-img-placeholder\'>📕</div>'">
                 <div class="zoom-overlay"><div class="zoom-icon">🔍</div></div>
