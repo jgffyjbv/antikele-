@@ -246,6 +246,61 @@
         }
 
         /* ══════════════════════════════════════════
+           NEW: IMAGE SHOWCASE + PRICE RANGE BANNER
+        ══════════════════════════════════════════ */
+        .image-showcase {
+            background: var(--cream);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+        }
+        .showcase-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.6rem;
+        }
+        .showcase-images {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .showcase-images img {
+            width: 280px;
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: var(--r-card);
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .showcase-images img:hover {
+            transform: scale(1.02);
+            box-shadow: var(--card-shadow-hover);
+        }
+        .price-range-badge {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--navy);
+            background: var(--warm-white);
+            padding: 0.65rem 2rem;
+            border-radius: 99px;
+            box-shadow: 0 1px 6px rgba(0,0,0,.06);
+            border: 1px solid var(--gold-pale);
+            letter-spacing: -0.01em;
+            text-align: center;
+        }
+        .price-range-badge span {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* ══════════════════════════════════════════
            MAIN CONTAINER + TOOLBAR
         ══════════════════════════════════════════ */
         .container {
@@ -648,6 +703,7 @@
             .products-grid { grid-template-columns: 1fr; gap: 1.1rem; }
             .product-image-wrap { width: 150px; min-width: 150px; }
             .product-title { font-size: 1.1rem; }
+            .showcase-images img { width: 220px; }
         }
 
         @media (max-width: 640px) {
@@ -663,6 +719,9 @@
             .hero-title { font-size: 2rem; }
             .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
             .header-right .pill-badge { display: none; }
+            .showcase-images { flex-direction: column; align-items: center; }
+            .showcase-images img { width: 100%; max-width: 320px; }
+            .price-range-badge { font-size: 1.25rem; padding: 0.55rem 1.5rem; }
         }
 
         @media (max-width: 420px) {
@@ -721,6 +780,19 @@
     </div>
 </section>
 
+<!-- ══ NEW: IMAGE SHOWCASE + PRICE RANGE ══ -->
+<section class="image-showcase">
+    <div class="showcase-inner">
+        <div class="showcase-images">
+            <img src="bookshelf.jpg" alt="Our bookshelf" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22180%22%3E%3Crect fill=%22%23f5f0e8%22 width=%22280%22 height=%22180%22/%3E%3Ctext fill=%22%23c4b09a%22 font-size=%2232%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3E📚%3C/text%3E%3C/svg%3E';">
+            <img src="storefront.jpg" alt="Our storefront" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22180%22%3E%3Crect fill=%22%23f5f0e8%22 width=%22280%22 height=%22180%22/%3E%3Ctext fill=%22%23c4b09a%22 font-size=%2232%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3E🏪%3C/text%3E%3C/svg%3E';">
+        </div>
+        <div class="price-range-badge">
+            Prices range between <span>$1,000</span> and <span>$15,000</span>
+        </div>
+    </div>
+</section>
+
 <!-- ══ TRUST BAR ══ -->
 <div class="trust-bar">
     <div class="trust-inner">
@@ -733,7 +805,7 @@
 
 <!-- ══ CATALOG ══ -->
 <div class="container">
-
+    <!-- ... rest of the product cards unchanged ... -->
     <div class="toolbar">
         <span class="results-count">Showing <strong>10</strong> premium editions</span>
         <span class="sort-chip">Sort by: Featured ▾</span>
@@ -1076,16 +1148,13 @@
     function closeLightbox() {
         lightbox.classList.remove('active');
         document.body.style.overflow = '';
-        // slight delay so animation can finish before clearing src
         setTimeout(() => { lbImg.src = ''; }, 300);
     }
 
-    // Keyboard: Escape closes lightbox
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeLightbox();
     });
 
-    // Keyboard: Enter/Space triggers zoom on image wrappers
     document.querySelectorAll('.product-image-wrap').forEach(el => {
         el.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
